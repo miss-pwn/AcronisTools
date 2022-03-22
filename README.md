@@ -10,8 +10,8 @@ AcronisTools uses the Microsoft Secret Store to securely store credentials and t
 
 First, install the required modules:
 ```powershell
-Install-Module -Name "Microsoft.PowerShell.SecretManagement" -AllowPrerelease
-Install-Module -Name "Microsoft.PowerShell.SecretStore" -AllowPrerelease
+Install-Module -Name "Microsoft.PowerShell.SecretManagement" 
+Install-Module -Name "Microsoft.PowerShell.SecretStore" 
 ```
 
 Then, configure your API Client vault.  This will store your Acronis API Client credentials. You can name this whatever you like, the AcronisTools module will ask you to provide the name at runtime.
