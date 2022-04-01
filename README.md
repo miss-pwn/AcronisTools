@@ -5,6 +5,8 @@ At its core, this is really just a useful tool to search across all tenants for 
 
 ## Prerequisites
 Windows PowerShell ISE which is baked into Windows OS
+Credential manager of your choosing or a really great memory for your master password to access the vault
+
 ### Microsoft Secret Store
 AcronisTools uses the Microsoft Secret Store to securely store credentials and tokens for Acronis tenants.  In order to use this tool, you must first install the appropriate modules and configure your secret store.
 
@@ -16,7 +18,7 @@ Install-Module -Name "Microsoft.PowerShell.SecretManagement"
 Install-Module -Name "Microsoft.PowerShell.SecretStore" 
 ```
 
-Then, configure your API Client vault.  This will store your Acronis API Client credentials. You can name this whatever you like, the AcronisTools module will ask you to provide the name at runtime.
+Then, configure your API Client vault.  This will store your Acronis API Client credentials. You can name this whatever you like, the AcronisTools module will ask you to provide the name at runtime. You will be prompted to create a master password for your vault anytime that it is accessed, be sure to generate at least 15 characters and store this securely.
 ```powershell
 Register-SecretVault -Name <AcronisSecretVault> -ModuleName "Microsoft.PowerShell.SecretStore"
 ```
