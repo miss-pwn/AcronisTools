@@ -4,9 +4,11 @@ Powershell Tools for Acronis.
 At its core, this is really just a useful tool to search across all tenants for a specific client or partner.  Since Acronis has limits to how many clients/partners a tenant can house, you may be in a situation where you are responsible for clients/partners across a multitude of tenants.  Sometimes finding the right tenant can be time consuming when done manually, this tool aims to make that process easier.
 
 ## Prerequisites
-
+Windows PowerShell ISE which is baked into Windows OS
 ### Microsoft Secret Store
 AcronisTools uses the Microsoft Secret Store to securely store credentials and tokens for Acronis tenants.  In order to use this tool, you must first install the appropriate modules and configure your secret store.
+
+
 
 First, install the required modules:
 ```powershell
@@ -20,7 +22,13 @@ Register-SecretVault -Name <AcronisSecretVault> -ModuleName "Microsoft.PowerShel
 ```
 
 ## Installation
-
+Download and extract the zip file and extract content
+Navigate to C:\Program Files\WindowsPowerShell\Modules and create a new folder called AcronisTool
+Move the extracted files into the AcronisTool folder
+Launch Windows Powershell
+```powershell
+Import-Module AcronisTools
+```
 
 ## Authentication
 
