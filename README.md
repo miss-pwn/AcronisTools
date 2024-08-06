@@ -5,7 +5,7 @@ At its core, this is really just a useful tool to search across all tenants for 
 
 ## Prerequisites
 Windows PowerShell ISE which is baked into Windows OS
-Credential manager of your choosing or a really great memory for your master password to access the vault
+Credential manager of your choosing or a really great memory for your master password to access the vault.
 
 ### Microsoft Secret Store
 AcronisTools uses the Microsoft Secret Store to securely store credentials and tokens for Acronis tenants.  In order to use this tool, you must first install the appropriate modules and configure your secret store.
@@ -51,7 +51,7 @@ SYNOPSIS
 
 SYNTAX
     New-AcronisSecret [-Name] <String> [-Vault] <String> [-ClientID] <String> [-ClientSecret] <String> [-BaseUri]
-    <String> [<CommonParameters>]
+    <String> [-Type] <String> [<CommonParameters>]
 
 
 DESCRIPTION
@@ -77,7 +77,7 @@ PARAMETERS
         The Base Uri used to authenticate and make API requests to your tenant.  This is typically the domain portion
         of the URL (eg. dev.acronis.com)
     -Type <String>
-        The Type is used to authenticate and make API requests to your tenant.  This is will be identified as "API" or "Legacy" when storing your secret to the vault.
+        The Type is used to differentiate between stored clients and make API requests to your tenant.  This is will be identified as "API" or "Legacy" when storing your secret to the vault.
   
 ```
 
