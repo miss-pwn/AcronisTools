@@ -64,6 +64,7 @@ function Get-AcronisSecret {
             ClientID = (Get-SecretInfo -Name $Name -Vault $Vault).Metadata.clientid
             ClientSecret = Get-Secret -Name $Name -Vault $Vault
             BaseUri = (Get-SecretInfo -Name $Name -Vault $Vault).Metadata.baseuri
+            Type = (Get-SecretInfo -Name $Name -Vault $Vault).Metadata.type
         }
         return $thisSecret
     }
@@ -100,7 +101,10 @@ function New-AcronisSecret {
         [Parameter(Position = 3, ValueFromPipeline = $true, Mandatory = $true)]
         [string]$ClientSecret,
         [Parameter(Position = 4, ValueFromPipeline = $true, Mandatory = $true)]
-        [string]$BaseUri
+        [string]$BaseUri,
+        [Parameter(Position = 5, ValueFromPipeline = $true, Mandatory = $true)]
+        [ValidateSet('api','legacy')]
+        [string]$Type 
     )
 
     if (-not (Get-SecretVault -Name $Vault -ErrorAction SilentlyContinue)){
@@ -109,7 +113,7 @@ function New-AcronisSecret {
         return
     }
     else {
-        Set-Secret -Vault $Vault -Name $Name -Secret $ClientSecret -Metadata @{clientid=$ClientID;baseuri=$BaseUri}
+        Set-Secret -Vault $Vault -Name $Name -Secret $ClientSecret -Metadata @{clientid=$ClientID;baseuri=$BaseUri;type=$Type}
     }
 }
 
@@ -131,17 +135,28 @@ function New-AcronisToken {
     $thisClientSecret = Get-Secret -Name $SecretName -Vault $SecretVault -AsPlainText
     $thisClientMetadata = (Get-SecretInfo -Name $SecretName -Vault $SecretVault).Metadata
 
-    $thisClientId = $thisClientMetadata.clientid
+    if ($thisClientMetadata.type -eq 'API') {
+        $thisClientId = $thisClientMetadata.clientid
 
-    $pair = "${thisClientId}:${thisClientSecret}"
-    $pairBytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
-    $pairBase64 = [System.Convert]::ToBase64String($pairBytes)
+        $pair = "${thisClientId}:${thisClientSecret}"
+        $pairBytes = [System.Text.Encoding]::ASCII.GetBytes($pair)
+        $pairBase64 = [System.Convert]::ToBase64String($pairBytes)
 
-    $basicAuthentication = "Basic $pairBase64"
-    $headers = @{"Authorization"=$basicAuthentication}
-    $headers.Add("Content-Type","application/x-www-form-urlencoded")
+        $basicAuthentication = "Basic $pairBase64"
+        $headers = @{"Authorization"=$basicAuthentication}
+        $headers.Add("Content-Type","application/x-www-form-urlencoded")
 
-    $postParams = @{"grant_type" = "client_credentials"}
+        $postParams = @{"grant_type" = "client_credentials"}
+    } elseif ($thisClientMetadata.type -eq 'Legacy') {
+        $thisUserName= $thisClientMetadata.clientid
+        $thisPassword= $thisClientSecret
+
+        $headers = @{"Content-Type"="application/x-www-form-urlencoded"}
+
+        $postParams = @{"grant_type" = "password"}
+        $postParams.Add("username",$thisUserName)
+        $postParams.Add("password",$thisPassword)
+    }
 
     $token = Invoke-RestMethod -Method Post -Uri "https://$($thisClientMetadata.baseuri)/api/2/idp/token" -Headers $headers -Body $postParams
 
