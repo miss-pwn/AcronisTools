@@ -76,6 +76,9 @@ PARAMETERS
     -BaseUri <String>
         The Base Uri used to authenticate and make API requests to your tenant.  This is typically the domain portion
         of the URL (eg. dev.acronis.com)
+    -Type <String>
+        The Type is used to authenticate and make API requests to your tenant.  This is will be identified as "API" or "Legacy" when storing your secret to the vault.
+  
 ```
 
 ### Acronis API Tokens
